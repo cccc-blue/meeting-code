@@ -1,8 +1,8 @@
 #N canvas 401 106 848 486 12;
-#X obj 216 383 dac~;
+#X obj 244 402 dac~;
 #X obj 40 72 mtof;
 #X obj 56 33 hsl 128 15 0 127 0 0 empty empty carrier_frequency -2
--8 0 10 -262144 -1 -1 4700 1;
+-8 0 10 -262144 -1 -1 5500 1;
 #X obj 102 241 +~;
 #X floatatom 224 60 5 0 0 0 - - -;
 #X msg 228 38 1000;
@@ -14,7 +14,7 @@
 #X obj 477 35 adc~;
 #X obj 487 127 *~;
 #X obj 532 48 hsl 128 15 0 127 0 0 empty empty empty -2 -8 0 10 -262144
--1 -1 8500 1;
+-1 -1 6200 1;
 #X obj 528 70 mtof;
 #X obj 528 94 osc~;
 #X obj 148 348 *~;
@@ -29,6 +29,11 @@
 #X obj 277 89 phasor~;
 #X obj 303 172 *~;
 #X obj 343 162 +~;
+#X obj 386 404 writesf~;
+#X msg 449 326 open rec.wav;
+#X msg 451 351 start;
+#X msg 454 375 stop;
+#X obj 253 356 +~;
 #X connect 1 0 3 0;
 #X connect 2 0 1 0;
 #X connect 3 0 10 0;
@@ -43,11 +48,9 @@
 #X connect 13 0 14 0;
 #X connect 14 0 15 0;
 #X connect 15 0 12 1;
-#X connect 16 0 0 0;
-#X connect 16 0 0 1;
+#X connect 16 0 32 0;
 #X connect 17 0 16 1;
-#X connect 18 0 0 0;
-#X connect 18 0 0 1;
+#X connect 18 0 32 1;
 #X connect 19 0 18 1;
 #X connect 20 0 18 1;
 #X connect 21 0 9 0;
@@ -55,3 +58,9 @@
 #X connect 22 0 16 1;
 #X connect 23 0 25 0;
 #X connect 24 0 23 0;
+#X connect 29 0 28 0;
+#X connect 30 0 28 0;
+#X connect 31 0 28 0;
+#X connect 32 0 0 0;
+#X connect 32 0 0 1;
+#X connect 32 0 28 0;
