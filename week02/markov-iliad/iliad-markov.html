@@ -1,0 +1,90 @@
+<html>
+	<head>
+		<style>
+			.wrapper {
+				width:600px;
+				margin: 3em auto;
+			}
+			.wrapper p {
+				font-size:16pt;
+				line-height:1.5em;
+				overflow-y:none;
+
+			}
+			.wrapper p.user:before {
+				content:'> ';
+				margin-right:5pt;
+				color:#AAA;
+			}
+			.wrapper p.system:before {
+				content:'< ';
+				margin-right:5pt;
+				color:#62A8E5;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="wrapper" id="wrapper">
+		</div>
+		<script src="./iliad-markov.js"></script>
+		<script>
+			function randomProperty(obj) {
+				var keys = Object.keys(obj)
+				return obj[keys[ keys.length * Math.random() << 0]];
+			};
+			function getMarkovWord(input) {
+				var words = input.split(" ");
+				var chain;
+				for(var i=words.length-1; i>-1; i--) {
+					if(typeof chain == "undefined") {
+						myWord = words[i];
+						chain = iliad_markov[myWord];
+					}
+				}
+				if(typeof chain == "undefined") {
+					chain = randomProperty(iliad_markov);
+				}
+				var myValue = Math.random()*chain._sum;
+				var acc = 0;
+				for(key in chain) {
+					if(key[0]!="_") {
+						acc+=chain[key];
+						if(myValue<acc) {
+							return key;
+						}
+					}
+				}
+				return chain[1];
+			}
+			function getMarkov(input) {
+				var lim = 8+Math.random()*5;
+				var word = getMarkovWord(input);
+				console.log(word);
+				var sb = "" + word;
+				for(var i=0; i<lim; i++) {
+					word = getMarkovWord(word);
+					sb = sb + " " + word;
+				}
+				return sb;
+			}
+			function makeParagraph(classname, content) {
+				var myP = document.createElement("p");
+				myP.setAttribute("contenteditable", true);
+				myP.setAttribute("class", classname);
+				myP.innerText = content;
+				myP.addEventListener("keydown", function(e) {
+					if(e.code == "Enter") {
+						e.preventDefault();
+						myText = e.srcElement.innerText;
+
+						makeParagraph("system", getMarkov(myText));
+						makeParagraph("user", "");
+					}
+				})
+				document.getElementById("wrapper").appendChild(myP);
+				return myP;
+			}
+			makeParagraph("user", "the quick brown fox jumps over the lazy dog");
+		</script>
+	</body>
+</html>

@@ -1,0 +1,44 @@
+<html>
+	<head></head>
+	<body>
+		<input type="file" id="upload">
+		<textarea id="textarea" cols="30" rows="10"></textarea>
+	</body>
+	<script>
+		document.getElementById('upload').addEventListener('change', readFileAsString)
+		var mymarkov;
+		function readFileAsString() {
+		    var files = this.files;
+		    if (files.length === 0) {
+		        console.log('No file is selected');
+		        return;
+		    }
+
+		    var reader = new FileReader();
+		    reader.onload = function(event) {
+		    	var markov = {};
+		    	var wordArray = event.target.result.split(/(?=[^']+)\W+/).map((s) => s.toLowerCase());
+		    	for(var i=0; i<wordArray.length-2; i++) {
+		    		if(typeof markov[wordArray[i]] == "undefined") {
+		    			markov[wordArray[i]] = {};
+		    		}
+		    		if(typeof markov[wordArray[i]][wordArray[i+1]] == "undefined") {
+		    			markov[wordArray[i]][wordArray[i+1]] = 1;
+		    		} else {
+		    			markov[wordArray[i]][wordArray[i+1]]++;
+		    		}
+		    	}
+		    	for(cur in markov) {
+		    		markov[cur]._sum = 0;
+		    		for(next in markov[cur]) {
+		    			if(next[0]!="_") markov[cur]._sum+=markov[cur][next];
+		    		}
+		    	}
+		    	mymarkov = markov;
+
+		    	document.getElementById("textarea").value = JSON.stringify(markov);
+		    };
+		    reader.readAsText(files[0]);
+		}
+	</script>
+</html>
